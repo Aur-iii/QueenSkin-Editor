@@ -49,7 +49,7 @@ Note: Keybinds are editable in `File -> Keybinds`.
 
 If you are running an unsigned community build:
 
-- macOS may show a security warning. Use `Right click -> Open` on first launch.
+- macOS may show a security warning or say the app is damaged. Use `xattr -dr com.apple.quarantine "/Applications/QueenSkin Editor.app"` before launching for the first time.
 - Windows may show SmartScreen warnings for unsigned builds.
 
 ## Release Builds
