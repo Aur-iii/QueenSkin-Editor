@@ -1,0 +1,1 @@
+{"main-capability":{"identifier":"main-capability","description":"Default capability for QueenSkin main window","local":true,"windows":["main"],"permissions":["core:default","core:image:allow-from-bytes","core:window:allow-set-icon","core:window:allow-close","core:window:allow-destroy"]}}

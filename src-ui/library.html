@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0920" />
+    <title>QueenSkin Editor · Projects</title>
+    <link rel="icon" type="image/png" sizes="512x512" href="./assets/qse.png" />
+    <link rel="apple-touch-icon" href="./assets/qse.png" />
+    <link rel="stylesheet" href="./library.css" />
+    <link rel="stylesheet" href="./theme.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="brand-row">
+        <div class="brand-wrap">
+          <img
+            class="brand-logo"
+            src="./assets/qse.png"
+            alt="QueenSkin icon"
+            width="38"
+            height="38"
+          />
+          <div class="brand-text">
+            <h1 class="title-gradient">QueenSkin Editor</h1>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <button class="btn small" disabled>Projects</button>
+          <button class="btn small" id="goEditorBtn">Editor</button>
+          <span class="header-divider" aria-hidden="true"></span>
+          <button class="btn small" id="openHelpBtn" type="button">Help</button>
+          <span class="header-divider" aria-hidden="true"></span>
+          <button class="btn small" id="openThemeBrowserBtn" type="button">Themes</button>
+          <button class="btn small" id="openKeybindsBtn">Keybinds</button>
+        </div>
+      </header>
+
+      <main class="main-shell">
+        <section class="library-workspace" aria-label="Project Library">
+          <aside class="card section-card project-column">
+            <div class="section-head">
+              <h2>Project Library</h2>
+            </div>
+
+            <div class="library-actions">
+              <button class="btn" id="newProjectBtn">New Project</button>
+              <button class="btn" id="openProjectBtn">Open...</button>
+              <button class="btn success" id="importSkinBtn">Import Skin PNG...</button>
+            </div>
+
+            <div class="dropzone" id="libraryDropzone" tabindex="0" role="button" aria-label="Open or drop .qse or .png">
+              <div class="dropzone-icon" aria-hidden="true">
+                <svg viewBox="0 0 640 640" focusable="false">
+                  <path
+                    d="M342.6 73.4C330.1 60.9 309.8 60.9 297.3 73.4L169.3 201.4C156.8 213.9 156.8 234.2 169.3 246.7C181.8 259.2 202.1 259.2 214.6 246.7L288 173.3L288 384C288 401.7 302.3 416 320 416C337.7 416 352 401.7 352 384L352 173.3L425.4 246.7C437.9 259.2 458.2 259.2 470.7 246.7C483.2 234.2 483.2 213.9 470.7 201.4L342.7 73.4zM160 416C160 398.3 145.7 384 128 384C110.3 384 96 398.3 96 416L96 480C96 533 139 576 192 576L448 576C501 576 544 533 544 480L544 416C544 398.3 529.7 384 512 384C494.3 384 480 398.3 480 416L480 480C480 497.7 465.7 512 448 512L192 512C174.3 512 160 497.7 160 480L160 416z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </div>
+              <p class="dropzone-label">.qse / .png</p>
+            </div>
+          </aside>
+
+          <section class="card section-card recent-column">
+            <div class="section-head">
+              <h2 id="recentHeading">Recent Projects</h2>
+              <div class="library-tabs" role="tablist" aria-label="Project shelves">
+                <button class="btn small tab-btn is-active" id="libraryTabBtn" type="button" role="tab" aria-selected="true">
+                  Library
+                </button>
+                <button class="btn small tab-btn" id="binTabBtn" type="button" role="tab" aria-selected="false">
+                  BIN
+                </button>
+              </div>
+              <button class="btn small" id="clearRecentBtn">Move All to BIN</button>
+            </div>
+
+            <ul id="recentProjects" class="recent-grid" aria-live="polite"></ul>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <div id="overlay" class="overlay" hidden>
+      <div class="overlay-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="overlayLabel">Working...</p>
+      </div>
+    </div>
+
+    <div id="projectModal" class="modal-backdrop" hidden>
+      <form id="projectModalForm" class="modal-card" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+        <h3 id="projectModalTitle">New Project</h3>
+
+        <label class="modal-field" for="projectModalNameInput">
+          Project Name
+          <input id="projectModalNameInput" type="text" maxlength="80" autocomplete="off" />
+        </label>
+
+        <fieldset id="projectModalArmTypeGroup" class="modal-fieldset">
+          <legend>Skin Type</legend>
+          <label class="radio-row">
+            <input id="projectModalArmClassic" type="radio" name="projectModalArmType" value="classic" checked />
+            Wide (Classic 4px)
+          </label>
+          <label class="radio-row">
+            <input id="projectModalArmSlim" type="radio" name="projectModalArmType" value="slim" />
+            Slim (3px)
+          </label>
+        </fieldset>
+
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="projectModalCancelBtn">Cancel</button>
+          <button class="btn success" type="submit" id="projectModalConfirmBtn">Create</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="editorEntryModal" class="modal-backdrop" hidden>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="editorEntryModalTitle">
+        <h3 id="editorEntryModalTitle">Open Editor</h3>
+        <p class="modal-copy">Choose how you want to start in the editor.</p>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="editorEntryCancelBtn">Cancel</button>
+          <button class="btn" type="button" id="editorEntryOpenBtn">Open Existing</button>
+          <button class="btn success" type="button" id="editorEntryCreateBtn">Create New</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="confirmModal" class="modal-backdrop" hidden>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <h3 id="confirmModalTitle">Confirm Action</h3>
+        <p class="modal-copy" id="confirmModalMessage">Are you sure?</p>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="confirmModalCancelBtn">Cancel</button>
+          <button class="btn danger" type="button" id="confirmModalConfirmBtn">Confirm</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="keybindModal" class="modal-backdrop" hidden>
+      <section class="modal-card keybind-modal-card" role="dialog" aria-modal="true" aria-labelledby="keybindModalTitle">
+        <h3 id="keybindModalTitle">Keybinds</h3>
+        <p class="modal-copy">Use Keybinds or Cmd/Ctrl + K. Includes fixed 2D/3D gesture controls.</p>
+        <label class="modal-field" for="keybindSearchInput">
+          Search
+          <input id="keybindSearchInput" type="text" autocomplete="off" spellcheck="false" placeholder="Find action or key..." />
+        </label>
+        <div id="keybindModalWarning" class="modal-warning" hidden></div>
+        <div id="keybindEmpty" class="modal-copy" hidden>No matching keybinds.</div>
+        <div id="keybindList" class="keybind-list"></div>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="keybindResetAllBtn">Reset All</button>
+          <button class="btn success" type="button" id="keybindCloseBtn">Done</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="themeBrowserModal" class="modal-backdrop" hidden>
+      <section class="modal-card theme-browser-modal-card" role="dialog" aria-modal="true" aria-labelledby="themeBrowserTitle">
+        <h3 id="themeBrowserTitle">Theme Browser</h3>
+        <p class="modal-copy">Choose a visual theme for both editor and library.</p>
+        <div id="themeBrowserGrid" class="theme-browser-grid"></div>
+        <input id="themeUploadInput" type="file" accept=".qsetheme,.json,application/json" hidden />
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="themeUploadBtn">Upload Theme...</button>
+          <button class="btn success" type="button" id="themeBrowserCloseBtn">Done</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="helpModal" class="modal-backdrop" hidden>
+      <section class="modal-card help-modal-card" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+        <h3 id="helpModalTitle">QueenSkin Editor Help</h3>
+        <div class="help-content">
+          <p class="modal-copy">
+            QueenSkin Editor was designed out of a lack of good skin editors. It is built to be precise,
+            user-friendly, and fun to work in.
+          </p>
+          <p class="modal-copy">
+            This app is currently in its community phase. Feedback, bug reports, and feature requests are all welcome.
+          </p>
+
+          <section class="help-section" aria-label="Quick Start">
+            <h4>Quick Start</h4>
+            <ol>
+              <li>Create a new project or open/import an existing <code>.qse</code> or <code>.png</code>.</li>
+              <li>Paint in 2D or directly on the 3D model.</li>
+              <li>Save the project as <code>.qse</code>.</li>
+              <li>Export the final skin as <code>.png</code> (and <code>.obj</code> if needed).</li>
+            </ol>
+          </section>
+
+          <section class="help-section" aria-label="Core Controls">
+            <h4>Core Controls</h4>
+            <ul>
+              <li><kbd>Q</kbd> Pencil</li>
+              <li><kbd>E</kbd> Eraser</li>
+              <li><kbd>F</kbd> Fill</li>
+              <li><kbd>M</kbd> Box Select</li>
+              <li><kbd>I</kbd> Eyedropper</li>
+              <li><kbd>W</kbd> Zoom Tool</li>
+              <li><kbd>Space</kbd> + drag to pan 2D canvas / rotate 3D viewport</li>
+              <li><kbd>Shift</kbd> + drag in 3D viewport to pan</li>
+              <li>Mouse wheel in 3D viewport to zoom</li>
+              <li><kbd>Cmd/Ctrl</kbd> + <kbd>Z</kbd> Undo</li>
+              <li><kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> Redo</li>
+              <li><kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> Keybinds</li>
+            </ul>
+          </section>
+
+          <section class="help-section" aria-label="Community Build Notes">
+            <h4>Community Build Notes</h4>
+            <ul>
+              <li>Unsigned macOS builds may require right click <strong>Open</strong> on first launch.</li>
+              <li>Unsigned Windows builds may show SmartScreen warnings.</li>
+            </ul>
+          </section>
+        </div>
+        <div class="inside-actions modal-actions">
+          <button class="btn success" type="button" id="helpCloseBtn">Done</button>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="./library.js"></script>
+  </body>
+</html>

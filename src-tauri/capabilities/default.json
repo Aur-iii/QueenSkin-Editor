@@ -1,0 +1,13 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-capability",
+  "description": "Default capability for QueenSkin main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:image:allow-from-bytes",
+    "core:window:allow-set-icon",
+    "core:window:allow-close",
+    "core:window:allow-destroy"
+  ]
+}

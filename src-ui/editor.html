@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0920" />
+    <title>QueenSkin Editor · Editor</title>
+    <link rel="icon" type="image/png" sizes="512x512" href="./assets/qse.png" />
+    <link rel="apple-touch-icon" href="./assets/qse.png" />
+    <link rel="stylesheet" href="./editor.css" />
+    <link rel="stylesheet" href="./theme.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="brand-row">
+        <div class="brand-wrap">
+          <img
+            class="brand-logo"
+            src="./assets/qse.png"
+            alt="QueenSkin icon"
+            width="38"
+            height="38"
+          />
+          <div class="brand-text">
+            <h1 class="title-gradient">
+              QueenSkin Editor
+              <span id="dirtyDot" class="dirty-dot" title="Unsaved changes"></span>
+            </h1>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <button class="btn small" id="goLibraryBtn">Projects</button>
+          <button class="btn small" disabled>Editor</button>
+          <span class="header-divider" aria-hidden="true"></span>
+          <button class="btn small" id="openHelpBtn" type="button">Help</button>
+        </div>
+      </header>
+
+      <main class="main-shell">
+        <section class="editor-shell" aria-label="Editor">
+          <div class="card editor-topbar">
+            <div class="editor-topbar-left">
+              <div class="file-menu" id="fileMenu">
+                <button
+                  class="btn small file-menu-btn"
+                  id="fileMenuBtn"
+                  type="button"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  File
+                </button>
+                <div class="file-menu-popover" id="fileMenuPopover" role="menu" hidden>
+                  <button class="file-menu-item" type="button" role="menuitem" data-file-action="new-project">
+                    New Project...
+                  </button>
+                  <button class="file-menu-item" type="button" role="menuitem" data-file-action="open-project">
+                    Open Project...
+                  </button>
+                  <button
+                    class="file-menu-item has-subpanel"
+                    type="button"
+                    role="menuitem"
+                    data-file-subpanel="recent"
+                  >
+                    Open Recent
+                    <span class="file-menu-caret" aria-hidden="true">›</span>
+                  </button>
+                  <div class="file-menu-divider" aria-hidden="true"></div>
+                  <button class="file-menu-item" type="button" role="menuitem" data-file-action="close-project">
+                    Close
+                  </button>
+                  <button class="file-menu-item" type="button" role="menuitem" data-file-action="save-project">
+                    Save
+                  </button>
+                  <button
+                    class="file-menu-item has-subpanel"
+                    type="button"
+                    role="menuitem"
+                    data-file-subpanel="save-as"
+                  >
+                    Save As...
+                    <span class="file-menu-caret" aria-hidden="true">›</span>
+                  </button>
+                  <button
+                    class="file-menu-item has-subpanel"
+                    type="button"
+                    role="menuitem"
+                    data-file-subpanel="export"
+                  >
+                    Export...
+                    <span class="file-menu-caret" aria-hidden="true">›</span>
+                  </button>
+                  <div class="file-menu-divider" aria-hidden="true"></div>
+                  <button class="file-menu-item" type="button" role="menuitem" data-file-action="project-settings">
+                    Project Settings...
+                  </button>
+                  <button class="file-menu-item" type="button" role="menuitem" data-file-action="keybinds">
+                    Keybinds...
+                  </button>
+                </div>
+                <div class="file-menu-subpanel" id="fileMenuSubpanel" hidden>
+                  <div class="file-menu-subpanel-title" id="fileMenuSubpanelTitle">Options</div>
+                  <div id="fileMenuSubpanelList" class="file-menu-subpanel-list"></div>
+                </div>
+              </div>
+              <button class="btn small" id="openThemeBrowserBtn" type="button">Themes</button>
+              <span class="chip">2D + 3D Sync</span>
+              <span class="chip">64x64</span>
+              <span id="projectNameChip" class="chip">No Project</span>
+              <span class="topbar-divider" aria-hidden="true"></span>
+              <label class="size-control" for="brushSizeRange">
+                <span id="brushSizeLabel" class="size-label">Brush 1px</span>
+                <input id="brushSizeRange" type="range" min="1" max="8" value="1" />
+              </label>
+            </div>
+            <div class="inside-actions topbar-actions">
+              <button class="btn success" id="saveProjectBtn">Save</button>
+              <button class="btn" id="revertProjectBtn">Revert</button>
+            </div>
+          </div>
+
+          <div class="editor-grid">
+            <aside class="card panel tools-panel">
+              <div class="tool-list">
+                <button class="btn small tool is-active" data-tool="pencil" title="Pencil (Q)" aria-label="Pencil (Q)">
+                  <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path d="M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z"/></svg>
+                </button>
+                <button class="btn small tool" data-tool="eraser" title="Eraser (E)" aria-label="Eraser (E)">
+                  <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path d="M210.5 480L333.5 480L398.8 414.7L225.3 241.2L98.6 367.9L210.6 479.9zM256 544L210.5 544C193.5 544 177.2 537.3 165.2 525.3L49 409C38.1 398.1 32 383.4 32 368C32 352.6 38.1 337.9 49 327L295 81C305.9 70.1 320.6 64 336 64C351.4 64 366.1 70.1 377 81L559 263C569.9 273.9 576 288.6 576 304C576 319.4 569.9 334.1 559 345L424 480L544 480C561.7 480 576 494.3 576 512C576 529.7 561.7 544 544 544L256 544z"/></svg>
+                </button>
+                <button class="btn small tool" data-tool="fill" title="Fill (F)" aria-label="Fill (F)">
+                  <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path d="M341.7 135.6L277.3 200L310.7 233.4C323.2 245.9 323.2 266.2 310.7 278.7C298.2 291.2 277.9 291.2 265.4 278.7L232 245.3L135.6 341.7C132.7 344.6 130.5 348.2 129.3 352L450.8 352L504.5 298.3C509.4 293.4 512.1 286.8 512.1 280C512.1 273.2 509.4 266.5 504.5 261.7L378.3 135.6C373.5 130.7 366.9 128 360 128C353.1 128 346.5 130.7 341.7 135.6zM90.3 296.4L186.7 200L137.3 150.6C124.8 138.1 124.8 117.8 137.3 105.3C149.8 92.8 170.1 92.8 182.6 105.3L232 154.7L296.4 90.3C313.3 73.5 336.1 64 360 64C383.9 64 406.7 73.5 423.6 90.3L549.7 216.4C566.5 233.3 576 256.1 576 280C576 303.9 566.5 326.7 549.7 343.6L343.6 549.7C326.7 566.5 303.9 576 280 576C256.1 576 233.3 566.5 216.4 549.7L90.3 423.6C73.5 406.7 64 383.9 64 360C64 336.1 73.5 313.3 90.3 296.4zM544 608C508.7 608 480 579.3 480 544C480 518.8 512.6 464.4 531.2 435.3C537.2 425.9 550.7 425.9 556.7 435.3C575.4 464.4 607.9 518.8 607.9 544C607.9 579.3 579.2 608 543.9 608z"/></svg>
+                </button>
+                <button class="btn small tool" data-tool="select" title="Box Select (M)" aria-label="Box Select (M)">
+                  <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path d="M48.2 130.8C48.1 130 48 129.1 48 128.3L48 128.1C48 119.3 55.2 112.1 64 112.1C64.9 112.1 65.9 112.2 66.8 112.3C74.3 113.6 80 120.2 80 128.1C80 136.9 72.8 144.1 64 144.1C56.1 144.1 49.5 138.4 48.2 130.9zM0 128C0 154.9 16.5 177.9 40 187.3L40 292.6C16.5 302.1 0 325.1 0 351.9C0 387.2 28.7 415.9 64 415.9C90.9 415.9 113.9 399.4 123.3 375.9L324.6 375.9C334.1 399.4 357.1 415.9 383.9 415.9C419.2 415.9 447.9 387.2 447.9 351.9C447.9 325 431.4 302 407.9 292.6L407.9 187.3C431.4 177.8 447.9 154.8 447.9 128C447.9 92.7 419.2 64 383.9 64C357 64 334 80.5 324.6 104L123.3 104C113.9 80.5 90.9 64 64 64C28.7 64 0 92.7 0 128zM368 128C368 119.2 375.2 112 384 112C392.8 112 400 119.2 400 128C400 136.8 392.8 144 384 144C375.2 144 368 136.8 368 128zM324.7 152C331.2 168 344 180.9 360 187.3L360 292.6C344 299.1 331.1 311.9 324.7 327.9L123.4 327.9C116.9 311.9 104.1 299 88.1 292.6L88.1 187.3C104.1 180.8 117 168 123.4 152L324.7 152zM384 336C392.8 336 400 343.2 400 352C400 360.8 392.8 368 384 368C375.2 368 368 360.8 368 352C368 343.2 375.2 336 384 336zM80 352C80 359.9 74.3 366.5 66.8 367.8C66 367.9 65.1 368 64.3 368L64.1 368C55.3 368 48.1 360.8 48.1 352C48.1 351.1 48.2 350.1 48.3 349.2C49.6 341.7 56.2 336 64.1 336C72.9 336 80.1 343.2 80.1 352zM516.7 312C523.2 328 536 340.9 552 347.3L552 452.6C536 459.1 523.1 471.9 516.7 487.9L315.4 487.9C308.9 471.9 296.1 459 280.1 452.6L280.1 431.9L232.1 431.9L232.1 452.6C208.6 462.1 192.1 485.1 192.1 511.9C192.1 547.2 220.8 575.9 256.1 575.9C283 575.9 306 559.4 315.4 535.9L516.7 535.9C526.2 559.4 549.2 575.9 576 575.9C611.3 575.9 640 547.2 640 511.9C640 485 623.5 462 600 452.6L600 347.3C623.5 337.8 640 314.8 640 288C640 252.7 611.3 224 576 224C549.1 224 526.1 240.5 516.7 264L464 264L464 273.6C474.7 284.5 483.1 297.5 488.6 312L516.6 312zM576 304C567.2 304 560 296.8 560 288C560 279.2 567.2 272 576 272C584.8 272 592 279.2 592 288C592 296.8 584.8 304 576 304zM271.8 514.7C271 520.5 267.1 525.4 261.6 527.5C256.2 529.6 250 528.5 245.5 524.7C241.1 520.9 239.1 514.9 240.3 509.2C241.1 503.4 245 498.5 250.5 496.4C255.9 494.3 262.1 495.4 266.6 499.2C271 503 273 509 271.8 514.7zM573.3 527.7C565.8 526.4 560.1 519.8 560.1 511.9C560.1 503.1 567.3 495.9 576.1 495.9C584 495.9 590.6 501.6 591.9 509.1L591.9 509.2C592 510.1 592.1 511 592.1 511.9C592.1 520.7 584.9 527.9 576.1 527.9C575.2 527.9 574.2 527.8 573.3 527.7z"/></svg>
+                </button>
+                <button class="btn small tool" data-tool="eyedropper" title="Eyedropper (I / Alt)" aria-label="Eyedropper (I)">
+                  <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path d="M405.6 93.2L304 194.8L294.6 185.4C282.1 172.9 261.8 172.9 249.3 185.4C236.8 197.9 236.8 218.2 249.3 230.7L409.3 390.7C421.8 403.2 442.1 403.2 454.6 390.7C467.1 378.2 467.1 357.9 454.6 345.4L445.2 336L546.8 234.4C585.8 195.4 585.8 132.2 546.8 93.3C507.8 54.4 444.6 54.3 405.7 93.3zM119.4 387.3C104.4 402.3 96 422.7 96 443.9L96 486.3L69.4 526.2C60.9 538.9 62.6 555.8 73.4 566.6C84.2 577.4 101.1 579.1 113.8 570.6L153.7 544L196.1 544C217.3 544 237.7 535.6 252.7 520.6L362.1 411.2L316.8 365.9L207.4 475.3C204.4 478.3 200.3 480 196.1 480L160 480L160 443.9C160 439.7 161.7 435.6 164.7 432.6L274.1 323.2L228.8 277.9L119.4 387.3z"/></svg>
+                </button>
+                <button class="btn small tool" data-tool="zoom" title="Zoom (W)" aria-label="Zoom (W)">
+                  <svg class="tool-icon tool-icon-zoom-in" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM272 176C258.7 176 248 186.7 248 200L248 248L200 248C186.7 248 176 258.7 176 272C176 285.3 186.7 296 200 296L248 296L248 344C248 357.3 258.7 368 272 368C285.3 368 296 357.3 296 344L296 296L344 296C357.3 296 368 285.3 368 272C368 258.7 357.3 248 344 248L296 248L296 200C296 186.7 285.3 176 272 176z"/></svg>
+                  <svg class="tool-icon tool-icon-zoom-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM200 248C186.7 248 176 258.7 176 272C176 285.3 186.7 296 200 296L344 296C357.3 296 368 285.3 368 272C368 258.7 357.3 248 344 248L200 248z"/></svg>
+                </button>
+              </div>
+            </aside>
+
+            <section class="center-stage" id="centerStage">
+              <section class="card panel viewport-panel" id="viewportPanel">
+                <div class="section-head viewport-head">
+                  <div class="badge-row">
+                    <span id="targetBadge" class="chip target-chip">TARGET: OUTER</span>
+                    <span class="chip">Fixed Light: Front 3/4</span>
+                  </div>
+
+                  <div class="viewport-controls">
+                    <label class="select-wrap" for="lightingMode">
+                      Lighting
+                      <select id="lightingMode">
+                        <option value="true-color">True Color</option>
+                        <option value="shadow-preview">Shadow Preview</option>
+                      </select>
+                    </label>
+                    <div class="viewport-top-actions">
+                      <button class="btn small" id="viewportGridToggleBtn" aria-pressed="true" type="button">
+                        Grid: On
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="viewport-canvas" id="viewportCanvasWrap">
+                  <canvas
+                    id="viewportCanvas"
+                    class="viewport-model-canvas"
+                    width="640"
+                    height="640"
+                    aria-label="3D viewport"
+                  ></canvas>
+                  <div class="axis-gizmo" aria-label="Axis gizmo">
+                    <button class="axis-btn" data-axis="x" type="button" title="Snap +X (Alt for -X)">X</button>
+                    <button class="axis-btn" data-axis="y" type="button" title="Snap +Y (Alt for -Y)">Y</button>
+                    <button class="axis-btn" data-axis="z" type="button" title="Snap +Z (Alt for -Z)">Z</button>
+                  </div>
+                </div>
+              </section>
+              <div class="splitter splitter-vertical" id="centerSplit" aria-hidden="true"></div>
+
+              <section class="card panel canvas-panel" id="canvasPanel">
+                <div class="section-head">
+                  <h2>2D Canvas</h2>
+                  <button class="btn small" id="gridToggleBtn" aria-pressed="true">Grid: On</button>
+                </div>
+
+                <div id="canvasStage" class="canvas-stage" tabindex="0" aria-label="2D canvas">
+                  <canvas id="pixelCanvas" class="pixel-canvas" width="640" height="640"></canvas>
+                  <div id="canvasHud" class="canvas-hud">Zoom 10x • Brush 1px</div>
+                </div>
+              </section>
+            </section>
+
+            <aside class="right-stack" id="rightStack">
+              <article class="card panel right-pane color-pane" id="colorPanel">
+                <div class="section-head">
+                  <h2>Color</h2>
+                </div>
+                <div class="color-picker">
+                  <div class="picker-grid">
+                    <canvas id="svCanvas" class="sv-canvas" width="196" height="196"></canvas>
+                    <canvas id="hueCanvas" class="hue-canvas" width="24" height="196"></canvas>
+                  </div>
+
+                  <div class="rgb-strips">
+                    <label class="strip-row" for="redRange">
+                      <span class="strip-label">R</span>
+                      <input id="redRange" type="range" min="0" max="255" value="196" />
+                      <span id="redValue" class="strip-value">196</span>
+                    </label>
+                    <label class="strip-row" for="greenRange">
+                      <span class="strip-label">G</span>
+                      <input id="greenRange" type="range" min="0" max="255" value="75" />
+                      <span id="greenValue" class="strip-value">75</span>
+                    </label>
+                    <label class="strip-row" for="blueRange">
+                      <span class="strip-label">B</span>
+                      <input id="blueRange" type="range" min="0" max="255" value="255" />
+                      <span id="blueValue" class="strip-value">255</span>
+                    </label>
+                    <label class="strip-row" for="alphaRange">
+                      <span class="strip-label">A</span>
+                      <input id="alphaRange" type="range" min="0" max="255" value="255" />
+                      <span id="alphaValue" class="strip-value">255</span>
+                    </label>
+                  </div>
+
+                  <div class="hex-row">
+                    <label class="hex-field">
+                      HEX (RGBA)
+                      <input id="hexInput" type="text" value="#C44BFFFF" maxlength="9" spellcheck="false" />
+                    </label>
+                    <div class="hex-preview-field">
+                      <span class="hex-preview-label">Preview</span>
+                      <div id="hexPreview" class="hex-preview" aria-hidden="true"></div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <div class="splitter splitter-horizontal" id="rightSplitTop" aria-hidden="true"></div>
+
+              <article class="card panel parts-panel right-pane" id="partsPanel">
+                <div class="section-head">
+                  <h2>Parts Visibility & Locks</h2>
+                </div>
+                <div id="partsList" class="parts-list"></div>
+              </article>
+              <div class="splitter splitter-horizontal" id="rightSplitBottom" aria-hidden="true"></div>
+
+              <article class="card panel right-pane layers-pane" id="layersPanel">
+                <div class="section-head">
+                  <h2>Paint Layers</h2>
+                </div>
+                <div class="layers-shared-controls">
+                  <label class="layers-shared-field layers-shared-blend" for="layerBlendSelect">
+                    <span class="layers-shared-label">Blend</span>
+                    <select id="layerBlendSelect">
+                      <option value="normal">Normal</option>
+                      <option value="multiply">Multiply</option>
+                    </select>
+                  </label>
+                  <label class="layers-shared-field layers-shared-opacity" for="layerOpacityRange">
+                    <span class="layers-shared-label">Opacity</span>
+                    <input id="layerOpacityRange" type="range" min="0" max="100" step="1" value="100" />
+                    <span id="layerOpacityValue" class="layers-shared-value">100%</span>
+                  </label>
+                </div>
+                <div id="layersList" class="layers-list" aria-live="polite"></div>
+                <div class="layers-footer-actions">
+                  <button class="btn small" id="addLayerBtn" aria-label="New layer">
+                    <span class="btn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M128 64C92.7 64 64 92.7 64 128L64 512C64 547.3 92.7 576 128 576L308 576C285.3 544.5 272 505.8 272 464C272 363.4 349.4 280.8 448 272.7L448 234.6C448 217.6 441.3 201.3 429.3 189.3L322.7 82.7C310.7 70.7 294.5 64 277.5 64L128 64zM389.5 240L296 240C282.7 240 272 229.3 272 216L272 122.5L389.5 240zM464 608C543.5 608 608 543.5 608 464C608 384.5 543.5 320 464 320C384.5 320 320 384.5 320 464C320 543.5 384.5 608 464 608zM480 400L480 448L528 448C536.8 448 544 455.2 544 464C544 472.8 536.8 480 528 480L480 480L480 528C480 536.8 472.8 544 464 544C455.2 544 448 536.8 448 528L448 480L400 480C391.2 480 384 472.8 384 464C384 455.2 391.2 448 400 448L448 448L448 400C448 391.2 455.2 384 464 384C472.8 384 480 391.2 480 400z"/></svg></span>
+                    <span>New Layer</span>
+                  </button>
+                  <button class="btn danger small" id="deleteLayerBtn" aria-label="Trash layer">
+                    <span class="btn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M232.7 69.9C237.1 56.8 249.3 48 263.1 48L377 48C390.8 48 403 56.8 407.4 69.9L416 96L512 96C529.7 96 544 110.3 544 128C544 145.7 529.7 160 512 160L128 160C110.3 160 96 145.7 96 128C96 110.3 110.3 96 128 96L224 96L232.7 69.9zM128 208L512 208L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 208zM216 272C202.7 272 192 282.7 192 296L192 488C192 501.3 202.7 512 216 512C229.3 512 240 501.3 240 488L240 296C240 282.7 229.3 272 216 272zM320 272C306.7 272 296 282.7 296 296L296 488C296 501.3 306.7 512 320 512C333.3 512 344 501.3 344 488L344 296C344 282.7 333.3 272 320 272zM424 272C410.7 272 400 282.7 400 296L400 488C400 501.3 410.7 512 424 512C437.3 512 448 501.3 448 488L448 296C448 282.7 437.3 272 424 272z"/></svg></span>
+                    <span>Trash</span>
+                  </button>
+                </div>
+              </article>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <div id="overlay" class="overlay" hidden>
+      <div class="overlay-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="overlayLabel">Working...</p>
+      </div>
+    </div>
+
+    <div id="renameModal" class="modal-backdrop" hidden>
+      <form id="renameModalForm" class="modal-card" role="dialog" aria-modal="true" aria-labelledby="renameModalTitle">
+        <h3 id="renameModalTitle">Rename Project</h3>
+        <label class="modal-field" for="renameModalInput">
+          Project Name
+          <input id="renameModalInput" type="text" maxlength="80" autocomplete="off" />
+        </label>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="renameModalCancelBtn">Cancel</button>
+          <button class="btn success" type="submit" id="renameModalConfirmBtn">Rename</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="projectConfigModal" class="modal-backdrop" hidden>
+      <form
+        id="projectConfigModalForm"
+        class="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="projectConfigModalTitle"
+      >
+        <h3 id="projectConfigModalTitle">Project</h3>
+        <label class="modal-field" for="projectConfigNameInput">
+          Project Name
+          <input id="projectConfigNameInput" type="text" maxlength="80" autocomplete="off" />
+        </label>
+        <fieldset id="projectConfigArmTypeGroup" class="modal-fieldset">
+          <legend>Skin Type</legend>
+          <label class="radio-option">
+            <input id="projectConfigArmClassic" type="radio" name="projectConfigArmType" value="classic" checked />
+            Wide (Classic, 4px arm)
+          </label>
+          <label class="radio-option">
+            <input id="projectConfigArmSlim" type="radio" name="projectConfigArmType" value="slim" />
+            Slim (3px arm)
+          </label>
+        </fieldset>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="projectConfigCancelBtn">Cancel</button>
+          <button class="btn success" type="submit" id="projectConfigConfirmBtn">Confirm</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="confirmModal" class="modal-backdrop" hidden>
+      <form id="confirmModalForm" class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <h3 id="confirmModalTitle">Confirm</h3>
+        <p id="confirmModalMessage" class="modal-copy"></p>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="confirmModalCancelBtn">Cancel</button>
+          <button class="btn success" type="submit" id="confirmModalConfirmBtn">Confirm</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="unsavedCloseModal" class="modal-backdrop" hidden>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="unsavedCloseModalTitle">
+        <h3 id="unsavedCloseModalTitle">Unsaved Changes</h3>
+        <p id="unsavedCloseModalMessage" class="modal-copy">
+          You have unsaved changes. Are you sure you want to close without saving?
+        </p>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="unsavedCloseCancelBtn">Cancel</button>
+          <button class="btn danger" type="button" id="unsavedCloseDiscardBtn">Close</button>
+          <button class="btn success" type="button" id="unsavedCloseSaveBtn">Save and Close</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="recoveryModal" class="modal-backdrop" hidden>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="recoveryModalTitle">
+        <h3 id="recoveryModalTitle">Recovery Center</h3>
+        <p id="recoveryModalMessage" class="modal-copy">
+          A newer autosave was found for this project. Restore unsaved changes or discard the autosave.
+        </p>
+        <div class="inside-actions modal-actions">
+          <button class="btn danger" type="button" id="recoveryDiscardBtn">Discard</button>
+          <button class="btn success" type="button" id="recoveryRestoreBtn">Restore autosave</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="keybindModal" class="modal-backdrop" hidden>
+      <section class="modal-card keybind-modal-card" role="dialog" aria-modal="true" aria-labelledby="keybindModalTitle">
+        <h3 id="keybindModalTitle">Keybinds</h3>
+        <p class="modal-copy">Use File > Keybinds or Cmd/Ctrl + K. Includes fixed 2D/3D gesture controls.</p>
+        <label class="modal-field" for="keybindSearchInput">
+          Search
+          <input id="keybindSearchInput" type="text" autocomplete="off" spellcheck="false" placeholder="Find action or key..." />
+        </label>
+        <div id="keybindModalWarning" class="modal-warning" hidden></div>
+        <div id="keybindEmpty" class="modal-copy" hidden>No matching keybinds.</div>
+        <div id="keybindList" class="keybind-list"></div>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="keybindResetAllBtn">Reset All</button>
+          <button class="btn success" type="button" id="keybindCloseBtn">Done</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="themeBrowserModal" class="modal-backdrop" hidden>
+      <section class="modal-card theme-browser-modal-card" role="dialog" aria-modal="true" aria-labelledby="themeBrowserTitle">
+        <h3 id="themeBrowserTitle">Theme Browser</h3>
+        <p class="modal-copy">Choose a visual theme for both editor and library.</p>
+        <div id="themeBrowserGrid" class="theme-browser-grid"></div>
+        <input id="themeUploadInput" type="file" accept=".qsetheme,.json,application/json" hidden />
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="themeUploadBtn">Upload Theme...</button>
+          <button class="btn success" type="button" id="themeBrowserCloseBtn">Done</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="helpModal" class="modal-backdrop" hidden>
+      <section class="modal-card help-modal-card" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+        <h3 id="helpModalTitle">QueenSkin Editor Help</h3>
+        <div class="help-content">
+          <p class="modal-copy">
+            QueenSkin Editor was designed out of a lack of good skin editors. It is built to be precise,
+            user-friendly, and fun to work in.
+          </p>
+          <p class="modal-copy">
+            This app is currently in its community phase. Feedback, bug reports, and feature requests are all welcome.
+          </p>
+
+          <section class="help-section" aria-label="Quick Start">
+            <h4>Quick Start</h4>
+            <ol>
+              <li>Create a new project or open/import an existing <code>.qse</code> or <code>.png</code>.</li>
+              <li>Paint in 2D or directly on the 3D model.</li>
+              <li>Save the project as <code>.qse</code>.</li>
+              <li>Export the final skin as <code>.png</code> (and <code>.obj</code> if needed).</li>
+            </ol>
+          </section>
+
+          <section class="help-section" aria-label="Core Controls">
+            <h4>Core Controls</h4>
+            <ul>
+              <li><kbd>Q</kbd> Pencil</li>
+              <li><kbd>E</kbd> Eraser</li>
+              <li><kbd>F</kbd> Fill</li>
+              <li><kbd>M</kbd> Box Select</li>
+              <li><kbd>I</kbd> Eyedropper</li>
+              <li><kbd>W</kbd> Zoom Tool</li>
+              <li><kbd>Space</kbd> + drag to pan 2D canvas / rotate 3D viewport</li>
+              <li><kbd>Shift</kbd> + drag in 3D viewport to pan</li>
+              <li>Mouse wheel in 3D viewport to zoom</li>
+              <li><kbd>Cmd/Ctrl</kbd> + <kbd>Z</kbd> Undo</li>
+              <li><kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> Redo</li>
+              <li><kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> Keybinds</li>
+            </ul>
+          </section>
+
+          <section class="help-section" aria-label="Community Build Notes">
+            <h4>Community Build Notes</h4>
+            <ul>
+              <li>Unsigned macOS builds may require right click <strong>Open</strong> on first launch.</li>
+              <li>Unsigned Windows builds may show SmartScreen warnings.</li>
+            </ul>
+          </section>
+        </div>
+        <div class="inside-actions modal-actions">
+          <button class="btn success" type="button" id="helpCloseBtn">Done</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="preflightModal" class="modal-backdrop" hidden>
+      <section class="modal-card preflight-modal-card" role="dialog" aria-modal="true" aria-labelledby="preflightTitle">
+        <h3 id="preflightTitle">Export Preflight</h3>
+        <p id="preflightSummary" class="modal-copy"></p>
+        <div id="preflightIssues" class="preflight-issues"></div>
+        <div class="inside-actions modal-actions">
+          <button class="btn" type="button" id="preflightCancelBtn">Cancel</button>
+          <button class="btn success" type="button" id="preflightProceedBtn">Export Anyway</button>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="./editor.js"></script>
+  </body>
+</html>
