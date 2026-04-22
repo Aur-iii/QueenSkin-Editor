@@ -18,7 +18,7 @@ jobs:
         working-directory: src-tauri
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -36,7 +36,7 @@ jobs:
         run: cargo tauri build --bundles dmg
 
       - name: Upload DMG
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: queenskin-editor-macos-dmg
           path: src-tauri/target/release/bundle/dmg/*.dmg
@@ -51,7 +51,7 @@ jobs:
         working-directory: src-tauri
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -69,7 +69,7 @@ jobs:
         run: cargo tauri build --bundles nsis
 
       - name: Upload EXE
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: queenskin-editor-windows-exe
           path: src-tauri/target/release/bundle/nsis/*.exe
