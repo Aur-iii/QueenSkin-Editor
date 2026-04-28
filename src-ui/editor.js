@@ -15,22 +15,12 @@ const KEYBIND_STORAGE_KEY = "queenskin.keybinds.v1";
 const QSE_THEME_FORMAT = "qsetheme";
 const QSE_THEME_VERSION = 1;
 const GUIDE_TEMPLATE_SOURCES = {
-  classic: [
-    "./assets/skin-template-wide-uv.png",
-    "../skin template - wide UV.png",
-    "./assets/skin-template-wide.png",
-    "../skin template - wide.png"
-  ],
-  slim: [
-    "./assets/skin-template-slim-uv.png",
-    "../skin template - slim UV.png",
-    "./assets/skin-template-slim.png",
-    "../skin template - slim.png"
-  ]
+  classic: ["./assets/skin-template-wide-uv.png", "./assets/skin-template-wide.png"],
+  slim: ["./assets/skin-template-slim-uv.png", "./assets/skin-template-slim.png"]
 };
 const VIEWPORT_MODEL_SOURCES = {
-  classic: ["./assets/skin-model-wide.obj", "../wide UV.obj"],
-  slim: ["./assets/skin-model-slim.obj", "../slim UV.obj"]
+  classic: ["./assets/skin-model-wide.obj"],
+  slim: ["./assets/skin-model-slim.obj"]
 };
 const VIEWPORT_OBJECT_TO_PART_SURFACE = {
   Head: { part: "Head", surface: "base" },

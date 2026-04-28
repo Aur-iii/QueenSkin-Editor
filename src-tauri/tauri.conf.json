@@ -38,7 +38,7 @@
     "fileAssociations": [
       {
         "ext": ["qse"],
-        "name": "QueenSkin.Project",
+        "name": "com.auri.queenskin.project",
         "description": "QueenSkin Editor Project File",
         "role": "Editor",
         "mimeType": "application/x-queenskin-project",

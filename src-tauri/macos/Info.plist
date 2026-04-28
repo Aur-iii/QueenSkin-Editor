@@ -21,10 +21,10 @@
       </array>
       <key>CFBundleTypeIconFiles</key>
       <array>
-        <string>qse-document</string>
+        <string>qse-document.icns</string>
       </array>
       <key>CFBundleTypeIconFile</key>
-      <string>qse-document</string>
+      <string>qse-document.icns</string>
     </dict>
   </array>
   <key>UTExportedTypeDeclarations</key>
@@ -35,7 +35,11 @@
       <key>UTTypeDescription</key>
       <string>QueenSkin Editor Project File</string>
       <key>UTTypeIconFile</key>
-      <string>qse-document</string>
+      <string>qse-document.icns</string>
+      <key>UTTypeIconFiles</key>
+      <array>
+        <string>qse-document.icns</string>
+      </array>
       <key>UTTypeConformsTo</key>
       <array>
         <string>public.data</string>

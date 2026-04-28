@@ -348,12 +348,12 @@ html[data-theme="trans"] {
   --btn-border: rgba(109, 176, 214, 0.62);
   --btn-hover: #b3e8ff;
   --btn-text: #17304a;
-  --lock-btn-bg: #ffd5ea;
-  --lock-btn-border: rgba(246, 170, 205, 0.92);
-  --lock-btn-text: #4d2d46;
-  --lock-btn-active-bg: #9b4f79;
-  --lock-btn-active-border: rgba(128, 63, 97, 0.92);
-  --lock-btn-active-text: #ffeaf6;
+  --lock-btn-bg: #9b4f79;
+  --lock-btn-border: rgba(128, 63, 97, 0.92);
+  --lock-btn-text: #ffeaf6;
+  --lock-btn-active-bg: #ffd5ea;
+  --lock-btn-active-border: rgba(246, 170, 205, 0.92);
+  --lock-btn-active-text: #4d2d46;
   --btn-success-bg: #c8f0e7;
   --btn-success-border: rgba(126, 207, 191, 0.72);
   --btn-danger-bg: #f7c8e1;
